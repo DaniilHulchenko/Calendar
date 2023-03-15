@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from "react";
 import { CellId } from "data/redux/slices/cellSlice";
-import { Lead } from "supabase/leads.table";
+// import { Lead } from "supabase/leads.table";
 type CellState = {
   id?: CellId;
-  draft?: Partial<Lead>;
+  // draft?: Partial<Lead>;
   updated?: boolean;
   toggleUpdate?: () => void;
 };
@@ -18,7 +18,7 @@ const CellProvider = ({ children }: { children: ReactNode }) => {
       updated,
       toggleUpdate,
     }),
-    [updated]
+    [updated],
   );
 
   return <CellContext.Provider value={value}>{children}</CellContext.Provider>;
