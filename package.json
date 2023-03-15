@@ -1,67 +1,24 @@
 {
-  "name": "calendar",
+  "name": "my-turborepo",
   "version": "0.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@headlessui/react": "^1.6.6",
-    "@heroicons/react": "^1.0.5",
-    "@popperjs/core": "^2.11.2",
-    "@radix-ui/react-slider": "^0.1.4",
-    "@reduxjs/toolkit": "^1.7.2",
-    "@supabase/supabase-js": "^1.35.4",
-    "@tanstack/react-query": "^4.16.1",
-    "@tanstack/react-query-devtools": "^4.16.1",
-    "classnames": "^2.3.1",
-    "date-fns": "^2.27.0",
-    "font-color-contrast": "^11.1.0",
-    "formik": "^2.2.9",
-    "framer-motion": "^6.3.0",
-    "googleapis": "^110.0.0",
-    "graphql": "^16.5.0",
-    "graphql-request": "^4.2.0",
-    "js-cookie": "^3.0.1",
-    "lodash": "^4.17.21",
-    "next": "^12.1.6",
-    "nodemailer": "^6.9.1",
-    "popmotion": "^11.0.3",
-    "react": "^18.1.0",
-    "react-avatar-editor": "^13.0.0",
-    "react-color": "^2.19.3",
-    "react-datepicker": "^4.6.0",
-    "react-dom": "^18.1.0",
-    "react-hook-form": "^7.33.1",
-    "react-hot-toast": "^2.2.0",
-    "react-popper": "^2.2.5",
-    "react-redux": "^8.0.1",
-    "role": "*",
-    "ui": "*",
-    "uuid": "^8.3.2",
-    "yup": "^0.32.11"
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint"
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.1",
-    "@types/node": "17.0.33",
-    "@types/nodemailer": "^6.4.7",
-    "@types/react": "^18.0.9",
-    "@types/react-avatar-editor": "^12.0.0",
-    "@types/react-color": "^3.0.6",
-    "@types/react-datepicker": "^4.3.4",
-    "@types/react-dom": "^18.0.11",
-    "@types/uuid": "^8.3.4",
-    "autoprefixer": "^10.4.0",
     "eslint-config-custom": "*",
-    "next-transpile-modules": "9.0.0",
-    "postcss": "^8.4.5",
-    "prettier-plugin-tailwindcss": "^0.1.4",
-    "tailwind-config": "*",
-    "tailwindcss": "^3.0.7",
-    "tsconfig": "*",
-    "typescript": "^4.6.3"
-  }
+    "turbo": "latest"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "packageManager": "yarn@1.22.19"
 }

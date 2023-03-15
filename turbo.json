@@ -1,0 +1,39 @@
+{
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**"]
+    },
+    "calendar#build": {
+      "dependsOn": [
+        "^build",
+        "$NEXT_PUBLIC_SUPABASE_REDIRECT_TO",
+        "$NEXT_PUBLIC_SUPABASE_URL",
+        "$NEXT_PUBLIC_SUPABASE_KEY",
+        "$HQ_APP_TOKEN",
+        "$SUPABASE_SERVICE_KEY",
+        "$API_SECRET_KEY"
+      ],
+      "outputs": [".next/**"]
+    },
+    "user-management#build": {
+      "dependsOn": [
+        "^build",
+        "$NEXT_PUBLIC_HQ_URL",
+        "$NEXT_PUBLIC_SUPABASE_URL",
+        "$NEXTAUTH_URL",
+        "$NEXTAUTH_SECRET",
+        "$HQ_APP_SECRET",
+        "$SUPABASE_SERVICE_KEY",
+        "$SUPABASE_INVITE_REDIRECT"
+      ],
+      "outputs": [".next/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "dev": {
+      "cache": false
+    }
+  }
+}
