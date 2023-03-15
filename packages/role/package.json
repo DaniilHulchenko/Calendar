@@ -1,0 +1,13 @@
+{
+  "name": "role",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint *.ts*"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^1.35.4",
+    "tsconfig": "*",
+    "ui": "*"
+  }
+}
