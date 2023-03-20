@@ -12,6 +12,7 @@ import { useSupabaseAuth } from "components/auth/SupabaseAuthProvider";
 import AppPageProps from "ui/AppPageProps";
 // import { SubmitButton, TextField } from "components/formik";
 import { useTranslation } from "components/translation";
+import { SubmitButton, TextField } from "components/formik";
 
 const loginSchema = yup.object({
   email: yup.string().email("Invalid email").required("Required"),
@@ -66,15 +67,9 @@ const LoginPage = () => {
       >
         <Formik initialValues={initialValues} onSubmit={handleEmailSubmit}>
           <Form className="space-y-2">
-            {/* <TextField
-              label={t("Continue with email")}
-              name="email"
-              type="email"
-            />
+            <TextField label={t("Continue with email")} name="email" type="email" />
 
-            <SubmitButton icon={<SparklesIcon />}>
-              {t("Get a Magic Link")}
-            </SubmitButton> */}
+            <SubmitButton icon={<SparklesIcon />}>{t("Get a Magic Link")}</SubmitButton>
           </Form>
         </Formik>
       </motion.div>
