@@ -7,13 +7,7 @@ import {
 } from "supabase/lead_program_blocks.table";
 import { ProgramBlock } from "supabase/program_blocks.table";
 import fontColorContrast from "font-color-contrast";
-import {
-  Fragment,
-  MouseEventHandler,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import { Fragment, MouseEventHandler, useRef, useEffect, useCallback } from "react";
 import { WorkspacePopover } from "./layout";
 import { useTranslation } from "./translation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -23,13 +17,7 @@ import { PanelForm, TextField } from "./formik";
 import DetailsListItem from "./panel/details/DetailsListItem";
 import * as yup from "yup";
 
-export function LeadProgramBlockPopover({
-  block,
-  leadId,
-}: {
-  block: ProgramBlock;
-  leadId: number;
-}) {
+export function LeadProgramBlockPopover({ block, leadId }: { block: ProgramBlock; leadId: number }) {
   const query = useLeadProgramBlockQuery(leadId, block.id);
 
   return (
@@ -42,20 +30,16 @@ export function LeadProgramBlockPopover({
       button={
         <Fragment>
           <span>{block.abbreviation}</span>
-          {query.data?.number !== undefined && (
-            <span>&nbsp;{query.data.number}</span>
-          )}
+          {query.data?.number !== undefined && <span>&nbsp;{query.data.number}</span>}
         </Fragment>
       }
-      content={(close) => {
+      content={(close: any) => {
         if (query.status === "loading") {
           return <div className="p-6">Loading...</div>;
         }
 
         if (query.status === "error") {
-          return (
-            <div className="p-6 text-red-500">Error: {query.error.message}</div>
-          );
+          return <div className="p-6 text-red-500">Error: {query.error.message}</div>;
         }
 
         return (
@@ -121,29 +105,15 @@ function BlockNumberForm({
         throw new Error("No new block found");
       }
 
-      queryClient.setQueryData<LeadProgramBlock>(
-        createLeadProgramBlockKey(leadId, programBlock.id),
-        newBlock
-      );
+      queryClient.setQueryData<LeadProgramBlock>(createLeadProgramBlockKey(leadId, programBlock.id), newBlock);
 
       onClose();
       toast.success(t("You have stored program block number"));
     }
-  }, [
-    insertMutation.data,
-    leadId,
-    onClose,
-    programBlock.id,
-    queryClient,
-    t,
-    updateMutation.data,
-  ]);
+  }, [insertMutation.data, leadId, onClose, programBlock.id, queryClient, t, updateMutation.data]);
 
   const handleSubmit = useCallback(
-    async (
-      values: BlockNumberValues,
-      helpers: FormikHelpers<BlockNumberValues>
-    ) => {
+    async (values: BlockNumberValues, helpers: FormikHelpers<BlockNumberValues>) => {
       helpersRef.current = helpers;
 
       if (leadProgramBlock) {
@@ -162,7 +132,7 @@ function BlockNumberForm({
         });
       }
     },
-    [insertMutation, leadProgramBlock, programBlock.id, leadId, updateMutation]
+    [insertMutation, leadProgramBlock, programBlock.id, leadId, updateMutation],
   );
 
   return (
