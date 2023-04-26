@@ -32,6 +32,9 @@ import { useTranslation } from "components/translation";
 import { useWeekBounds } from "../WeekBoundsProvider";
 import { Lead, Mutable } from "supabase/leads.table";
 import { CellContext } from "components/auth/CellProvider";
+import { sendEmail } from "config/email";
+import { useLeadTeam, useLeadTeamWithEmail } from "supabase/trainer_lead.table";
+import { format } from "date-fns";
 
 const LeadForm = ({ lead }: { lead: Partial<Lead> }) => {
   const dispatch = useAppDispatch();
@@ -40,10 +43,14 @@ const LeadForm = ({ lead }: { lead: Partial<Lead> }) => {
   const t = useTranslation();
   const weekBounds = useWeekBounds();
   const cellContext = useContext(CellContext);
+  const team = useLeadTeamWithEmail(lead.id || 0);
   const initialValues = useMemo(
     () => leadToFieldValues(cell.draft),
     [cell.draft]
   );
+  const sendEmailHTML = (leadName: string, date: string) => {
+    return `<div><p>The lead ${leadName}(${date})  has been updated</p></div>`;
+  };
   const updateLeadMutation = useMutation({
     mutationFn: leadsMutation,
     onSuccess: (updatedLead) => {
@@ -54,9 +61,28 @@ const LeadForm = ({ lead }: { lead: Partial<Lead> }) => {
             lead.id === updatedLead[0].id ? updatedLead[0] : lead
           )
       );
+
       toast.success(t("Lead updated"));
       cellContext.toggleUpdate?.();
       dispatch(cellSlice.actions.clearDraft());
+      team.data?.map((team) => {
+        sendEmail(
+          team.users.email,
+          sendEmailHTML(
+            lead.event_title
+              ? `${lead.event_title} - ${lead.customer_name}`
+              : lead.customer_name || "",
+            `${format(
+              new Date(lead.arrival_at || ""),
+              "dd-MM-yyyy"
+            )} - ${format(
+              new Date(lead.departure || lead.arrival_at || ""),
+              "dd-MM-yyyy"
+            )}`
+          ),
+          `The lead has been updated`
+        );
+      });
     },
   });
 
@@ -160,6 +186,7 @@ const LeadForm = ({ lead }: { lead: Partial<Lead> }) => {
         label={leadFieldLabels.attentionPeculiarity}
         type="text"
       />
+      <TextField name="cache" label={leadFieldLabels.cache} type="text" />
 
       <TextField
         name="dailyRate"
