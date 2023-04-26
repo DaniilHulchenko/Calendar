@@ -32,12 +32,14 @@ export function WorkspacePopover({
   button,
   description,
   content,
+  showWorkSpace,
 }: {
   description: ReactNode;
   className?: string;
   style?: MotionStyle;
   button: ReactNode;
   content: (close: () => void) => ReactNode;
+  showWorkSpace?: boolean;
 }) {
   const t = useTranslation();
 
@@ -97,7 +99,12 @@ export function WorkspacePopover({
                   <Panel className="my-2 text-base">
                     <div className="flex gap-6 border-b p-6">
                       <div className="grow">
-                        <h2 className="font-bold">{t("Edit workspace")}</h2>
+                        {showWorkSpace ? (
+                          <></>
+                        ) : (
+                          <h2 className="font-bold">{t("Edit workspace")}</h2>
+                        )}
+
                         <p className="text-sm text-gray-500">{description}</p>
                       </div>
 

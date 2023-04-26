@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { supabaseClient } from "supabase/client";
 import { Profile } from "./profiles.table";
+import { useQuery } from "@tanstack/react-query";
 
 export type Trainer = {
   id: string;

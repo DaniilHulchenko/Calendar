@@ -1,3 +1,4 @@
+import { HqLeadStatusType } from "data/hq/leads.hq";
 import { supabaseClient } from "supabase/client";
 import { add, formatISO } from "date-fns";
 
@@ -12,6 +13,7 @@ export type LeadTrainer = {
 export interface Lead {
   difference?: string[];
   id: number;
+  cache: string | null;
   created_at: string | null;
   hq_labs_synced: boolean;
 
@@ -20,7 +22,7 @@ export interface Lead {
   programPeriod: string | null;
   customer_name: string;
   contact_person: string | null;
-  status: any;
+  status: HqLeadStatusType;
   required_trainers_amount: number | null;
 
   location: string | null;
@@ -43,6 +45,7 @@ export interface Lead {
 
   program_block_names: string | null;
   required_language: string | null;
+  special?: boolean;
   // trainers: LeadTrainer[];
 }
 

@@ -19,7 +19,6 @@ import {
   Avatar,
   createAvatarsKey,
   insertAvatar,
-  updateTrainers,
   useAvatarDeleteMutation,
   useAvatarsQuery,
 } from "supabase/avatars.table";
@@ -29,14 +28,22 @@ import InfoBlock from "ui/InfoBlock";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import DefaultDialogButtons from "ui/dialog/DefaultDialogButtons";
 import FileButton from "components/buttons/FileButton";
-import { PlusIcon, UploadIcon, TrashIcon, StarIcon } from "@heroicons/react/solid";
+import {
+  PlusIcon,
+  UploadIcon,
+  TrashIcon,
+  StarIcon,
+} from "@heroicons/react/solid";
 import Button from "ui/buttons/Button";
 import { XIcon } from "@heroicons/react/outline";
 import Badge from "components/layout/Badge";
 import Carousel from "components/layout/Carousel";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as uuid from "uuid";
-import { uploadAvatar, useAvatarRemoveFileMutation } from "supabase/avatars.storage";
+import {
+  uploadAvatar,
+  useAvatarRemoveFileMutation,
+} from "supabase/avatars.storage";
 import LoadingButton from "ui/buttons/LoadingButton";
 import _ from "lodash";
 
@@ -44,7 +51,8 @@ function AvatarList() {
   const t = useTranslation();
   const { id: userId } = useSupabaseUser();
 
-  const { isLoading: avatarsAreLoading, data: avatars } = useAvatarsQuery(userId);
+  const { isLoading: avatarsAreLoading, data: avatars } =
+    useAvatarsQuery(userId);
 
   const { data: profile } = useProfileQuery(userId);
 
@@ -68,7 +76,9 @@ function AvatarList() {
       return;
     }
 
-    setContainerIsWider(containerRef.current.offsetWidth > buttonRef.current.offsetWidth);
+    setContainerIsWider(
+      containerRef.current.offsetWidth > buttonRef.current.offsetWidth
+    );
   }, [avatars?.length]);
 
   return (
@@ -76,7 +86,7 @@ function AvatarList() {
       <button
         className={classNames(
           "flex grow overflow-hidden rounded-lg border border-gray-200 px-2 transition hover:border-indigo-400 hover:ring-1 hover:ring-indigo-400",
-          containerIsWider ? "justify-start" : "justify-center",
+          containerIsWider ? "justify-start" : "justify-center"
         )}
         ref={buttonRef}
         onClick={() => setEditorOpen(true)}
@@ -91,12 +101,18 @@ function AvatarList() {
             </Fragment>
           )}
 
-          {avatars?.length === 0 && <InfoBlock>{t("No avatars yet")}</InfoBlock>}
+          {avatars?.length === 0 && (
+            <InfoBlock>{t("No avatars yet")}</InfoBlock>
+          )}
 
           {mainAvatar && <ProfileAvatar url={mainAvatar.url} />}
 
           {otherAvatars?.map((avatar, index) => (
-            <div key={avatar.id} className="relative" style={{ zIndex: -(index + 1) }}>
+            <div
+              key={avatar.id}
+              className="relative"
+              style={{ zIndex: -(index + 1) }}
+            >
               <div className="absolute inset-0 rounded-full bg-white" />
               <ProfileAvatar url={avatar.url} opacity={0.5} />
             </div>
@@ -111,7 +127,13 @@ function AvatarList() {
 
 export default AvatarList;
 
-function AvatarDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+function AvatarDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
   const t = useTranslation();
   const avatarEditorRef = useRef<AvatarEditor>(null);
 
@@ -136,7 +158,14 @@ function AvatarDialog({ open, onClose }: { open: boolean; onClose: () => void })
     onClose();
   }, [onClose]);
 
-  const updateBlob = useMemo(() => _.debounce(() => avatarEditorRef.current?.getImage().toBlob(setBlob), 300), []);
+  const updateBlob = useMemo(
+    () =>
+      _.debounce(
+        () => avatarEditorRef.current?.getImage().toBlob(setBlob),
+        300
+      ),
+    []
+  );
 
   useEffect(() => {
     return () => {
@@ -144,10 +173,13 @@ function AvatarDialog({ open, onClose }: { open: boolean; onClose: () => void })
     };
   }, [updateBlob]);
 
-  const handleAvatarCarouselChange = useCallback((avatar: Avatar | null, index: number | null) => {
-    setAvatar(avatar);
-    setIndex(index);
-  }, []);
+  const handleAvatarCarouselChange = useCallback(
+    (avatar: Avatar | null, index: number | null) => {
+      setAvatar(avatar);
+      setIndex(index);
+    },
+    []
+  );
 
   return (
     <DefaultDialog
@@ -166,7 +198,11 @@ function AvatarDialog({ open, onClose }: { open: boolean; onClose: () => void })
         )}
 
         {file && (
-          <motion.div className="flex h-full flex-col" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+          <motion.div
+            className="flex h-full flex-col"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
             <AvatarEditor
               ref={avatarEditorRef}
               className="mx-auto"
@@ -212,7 +248,13 @@ function AvatarDialog({ open, onClose }: { open: boolean; onClose: () => void })
 
         {file && (
           <Fragment>
-            {blob && <AvatarUploadButton filename={file.name} blob={blob} onUploaded={() => setFile(undefined)} />}
+            {blob && (
+              <AvatarUploadButton
+                filename={file.name}
+                blob={blob}
+                onUploaded={() => setFile(undefined)}
+              />
+            )}
 
             <Button
               icon={<XIcon />}
@@ -236,7 +278,9 @@ function AvatarCountBadge({ index }: { index: number | null | undefined }) {
 
   return (
     <div className="flex h-14 w-full items-start justify-end pt-3 pr-3">
-      {index !== null && index !== undefined && avatars && <Badge>{`${index + 1}/${avatars.length}`}</Badge>}
+      {index !== null && index !== undefined && avatars && (
+        <Badge>{`${index + 1}/${avatars.length}`}</Badge>
+      )}
     </div>
   );
 }
@@ -261,18 +305,30 @@ function AvatarCarousel({
     (index: number) => {
       onChange(avatarsQuery.data ? avatarsQuery.data[index] : null, index);
     },
-    [avatarsQuery.data, onChange],
+    [avatarsQuery.data, onChange]
   );
 
   return (
     <Fragment>
-      <Carousel noControls={avatarsQuery.isLoading || avatarsQuery.data?.length === 0} onChange={handleCarouselChange}>
-        {avatarsQuery.isLoading && <ProfileAvatar skeleton={true} className="mx-auto" />}
+      <Carousel
+        noControls={avatarsQuery.isLoading || avatarsQuery.data?.length === 0}
+        onChange={handleCarouselChange}
+      >
+        {avatarsQuery.isLoading && (
+          <ProfileAvatar skeleton={true} className="mx-auto" />
+        )}
 
-        {avatarsQuery.data?.length === 0 && <InfoBlock>{t("Add an avatar")}</InfoBlock>}
+        {avatarsQuery.data?.length === 0 && (
+          <InfoBlock>{t("Add an avatar")}</InfoBlock>
+        )}
 
         {avatarsQuery.data?.map((avatar) => (
-          <ProfileAvatar key={avatar.id} url={avatar.url} skeleton={false} className="mx-auto" />
+          <ProfileAvatar
+            key={avatar.id}
+            url={avatar.url}
+            skeleton={false}
+            className="mx-auto"
+          />
         ))}
       </Carousel>
     </Fragment>
@@ -296,7 +352,13 @@ function AvatarMainBadge({ avatar }: { avatar: Avatar | null | undefined }) {
   );
 }
 
-function Slider({ value, onChange }: { value: number; onChange: (value: number) => void }) {
+function Slider({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (value: number) => void;
+}) {
   return (
     <SliderPrimitive.Root
       min={1}
@@ -314,14 +376,22 @@ function Slider({ value, onChange }: { value: number; onChange: (value: number) 
       <SliderPrimitive.Thumb
         className={classNames(
           "block h-5 w-5 rounded-full bg-indigo-500",
-          "focus:outline-none focus-visible:ring focus-visible:ring-indigo-400 focus-visible:ring-opacity-75",
+          "focus:outline-none focus-visible:ring focus-visible:ring-indigo-400 focus-visible:ring-opacity-75"
         )}
       />
     </SliderPrimitive.Root>
   );
 }
 
-function AvatarUploadButton({ filename, blob, onUploaded }: { filename: string; blob: Blob; onUploaded: () => void }) {
+function AvatarUploadButton({
+  filename,
+  blob,
+  onUploaded,
+}: {
+  filename: string;
+  blob: Blob;
+  onUploaded: () => void;
+}) {
   const t = useTranslation();
   const user = useSupabaseUser();
   const queryClient = useQueryClient();
@@ -341,21 +411,21 @@ function AvatarUploadButton({ filename, blob, onUploaded }: { filename: string; 
     const avatarResponse = await insertAvatar({
       url,
       profile_id: user.id,
-      // avatar_id: user.id,
+      avatar_id: user.id,
     });
 
     if (avatarResponse.error) {
       throw new Error(avatarResponse.error.message);
     }
-    updateTrainers(avatarResponse.data.avatar_id, avatarResponse.data.profile_id);
-    queryClient.setQueryData<Avatar[]>(createAvatarsKey(user.id), (oldAvatars = []) => [
-      ...oldAvatars,
-      avatarResponse.data,
-    ]);
+
+    queryClient.setQueryData<Avatar[]>(
+      createAvatarsKey(user.id),
+      (oldAvatars = []) => [...oldAvatars, avatarResponse.data]
+    );
 
     await profileMutation.mutateAsync({
       id: user.id,
-      avatar_id: +avatarResponse.data.id,
+      avatar_id: avatarResponse.data.id,
     });
   });
 
@@ -429,14 +499,23 @@ function AvatarRemoveButton({ avatar }: { avatar: Avatar }) {
 
       updateProfile({
         id: userId,
-        avatar_id: mainAvatarId !== null ? +mainAvatarId : 0,
+        avatar_id: mainAvatarId,
       });
 
       return;
     }
 
-    deleteAvatar(+avatar.id);
-  }, [avatar.id, avatars, deleteAvatar, profile, removedFiles, resetRemovedFiles, updateProfile, userId]);
+    deleteAvatar(avatar.id);
+  }, [
+    avatar.id,
+    avatars,
+    deleteAvatar,
+    profile,
+    removedFiles,
+    resetRemovedFiles,
+    updateProfile,
+    userId,
+  ]);
 
   useEffect(() => {
     if (!updatedProfile) {
@@ -445,7 +524,7 @@ function AvatarRemoveButton({ avatar }: { avatar: Avatar }) {
 
     resetUpdatedProfile();
 
-    deleteAvatar(+avatar.id);
+    deleteAvatar(avatar.id);
   }, [avatar.id, deleteAvatar, resetUpdatedProfile, updatedProfile]);
 
   useEffect(() => {
@@ -455,8 +534,9 @@ function AvatarRemoveButton({ avatar }: { avatar: Avatar }) {
 
     resetDeletedAvatar();
 
-    queryClient.setQueryData<Avatar[]>(createAvatarsKey(userId), (oldAvatars = []) =>
-      oldAvatars.filter(({ id }) => id !== avatar.id),
+    queryClient.setQueryData<Avatar[]>(
+      createAvatarsKey(userId),
+      (oldAvatars = []) => oldAvatars.filter(({ id }) => id !== avatar.id)
     );
 
     toast.success(t("Avatar removed"));
@@ -486,7 +566,7 @@ function AvatarMakeMainButton({ avatar }: { avatar: Avatar }) {
   const handleClick = useCallback(async () => {
     await profileMutation.mutateAsync({
       id: userId,
-      avatar_id: +avatar.id,
+      avatar_id: avatar.id,
     });
 
     toast.success(t("Set avatar as main avatar"));

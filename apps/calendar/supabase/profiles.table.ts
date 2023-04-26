@@ -22,11 +22,10 @@ const table = "profiles";
 
 export function useProfileQuery(userId: string) {
   return useQuery(supabaseProfileByUserId(userId), async () => {
-    const isExist = await supabaseClient.from<Profile>(table).select("*").eq("id", userId);
-    if (Array.isArray(isExist.data) && isExist.data.length === 0) {
-      await supabaseClient.from<Profile>(table).insert({ id: userId });
-    }
-    const response = await supabaseClient.from<Profile>(table).select(`*`).eq("id", userId);
+    const response = await supabaseClient
+      .from<Profile>(table)
+      .select(`*`)
+      .eq("id", userId);
 
     if (response.error) {
       throw new Error(response.error.message);
@@ -48,7 +47,11 @@ export function useProfileMutation(userId: string) {
   const queryClient = useQueryClient();
 
   return useMutation(async (values: ProfileUpdateValues) => {
-    const { data, error } = await supabaseClient.from<Profile>(table).update(values).eq("id", values.id).single();
+    const { data, error } = await supabaseClient
+      .from<Profile>(table)
+      .update(values)
+      .eq("id", values.id)
+      .single();
 
     if (error) {
       throw error;
