@@ -22,15 +22,22 @@ const TrainersPage = () => {
   const [selectedTrainer, setSelectedTrainer] = useState<any>();
   const [term, setTerm] = useState<string>("");
   const user = useSupabaseUser();
-  const trainersQuery = useTrainers(selectedTrainer?.id || user.id);
+  const trainersQuery = useTrainers();
   useEffect(() => {
-    if (!trainersQuery.data?.find((trainer: any) => trainer.id === selectedTrainer?.id)) {
+    if (
+      !trainersQuery.data?.find(
+        (trainer: any) => trainer.id === selectedTrainer?.id
+      )
+    ) {
       trainersQuery.data && setSelectedTrainer(trainersQuery.data[0]);
     }
   }, [selectedTrainer?.id, trainersQuery.data]);
-
   return (
-    <DefaultLayout icon={<UsersIcon />} title={t("Trainers")} description={t("Find the right trainers")}>
+    <DefaultLayout
+      icon={<UsersIcon />}
+      title={t("Trainers")}
+      description={t("Find the right trainers")}
+    >
       <div className="mb-[-40px] block py-2 px-4 lg:hidden">
         <DefaultCombobox
           label={t("Search trainers")}
@@ -52,7 +59,9 @@ const TrainersPage = () => {
           {trainersQuery.data?.map((trainer: any) => {
             return (
               <DefaultCombobox.Option key={trainer.id} value={trainer.id}>
-                {trainer.profiles?.name ? trainer.profiles?.name : trainer.profiles?.user.email}
+                {trainer.profiles?.name
+                  ? trainer.profiles?.name
+                  : trainer.profiles?.user?.email}
               </DefaultCombobox.Option>
             );
           })}
@@ -64,7 +73,12 @@ const TrainersPage = () => {
 
                 return (
                   <DefaultCombobox.Message key={index}>
-                    <div className={classNames("h-4 animate-pulse rounded bg-gray-200", part > 0 && `w-${part}/3`)} />
+                    <div
+                      className={classNames(
+                        "h-4 animate-pulse rounded bg-gray-200",
+                        part > 0 && `w-${part}/3`
+                      )}
+                    />
                   </DefaultCombobox.Message>
                 );
               })}
@@ -88,7 +102,9 @@ const TrainersPage = () => {
           <div className="hidden lg:block">
             <Fragment>
               {trainersQuery.isLoading &&
-                Array.from(Array(3).keys()).map((i) => <TrainerListItem key={i} skeleton={true} />)}
+                Array.from(Array(3).keys()).map((i) => (
+                  <TrainerListItem key={i} skeleton={true} />
+                ))}
               {trainersQuery.data?.length === 0 && (
                 <li>
                   <InfoBlock>{t("No trainers found")}</InfoBlock>
@@ -107,10 +123,15 @@ const TrainersPage = () => {
           </div>
         }
       >
-        {!selectedTrainer && !trainersQuery.isLoading && trainersQuery.data && trainersQuery.data.length > 0 && (
-          <InfoBlock>{t("Choose a trainer")}</InfoBlock>
+        {!selectedTrainer &&
+          !trainersQuery.isLoading &&
+          trainersQuery.data &&
+          trainersQuery.data.length > 0 && (
+            <InfoBlock>{t("Choose a trainer")}</InfoBlock>
+          )}
+        {selectedTrainer && (
+          <TrainerProfile key={selectedTrainer.id} trainer={selectedTrainer} />
         )}
-        {selectedTrainer && <TrainerProfile key={selectedTrainer.id} trainer={selectedTrainer} />}
       </ListLayout>
     </DefaultLayout>
   );
@@ -121,8 +142,6 @@ export default TrainersPage;
 /** @todo provide loading state */
 const TrainerProfile = ({ trainer }: { trainer: any }) => {
   const t = useTranslation();
-  console.log(trainer);
-
   return (
     <motion.div
       initial={{ x: -10, opacity: 0 }}
@@ -131,13 +150,24 @@ const TrainerProfile = ({ trainer }: { trainer: any }) => {
       className="w-full divide-y"
     >
       <div className="mb-6 flex flex-wrap items-start gap-4">
-        <motion.div className="shrink-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}>
-          <ProfileAvatar url={trainer.avatars.url} skeleton={false} />
+        <motion.div
+          className="shrink-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          {trainer.avatars && (
+            <ProfileAvatar url={trainer.avatars.url} skeleton={false} />
+          )}
         </motion.div>
 
         <div>
           {trainer.profiles?.name && (
-            <motion.h2 initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-2xl font-semibold">
+            <motion.h2
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-2xl font-semibold"
+            >
               {trainer.profiles?.name}
             </motion.h2>
           )}
@@ -167,7 +197,9 @@ const TrainerProfile = ({ trainer }: { trainer: any }) => {
         </div>
       </div>
 
-      {(trainer.about_me || trainer.driving_license || trainer.dlrg_certificate) && (
+      {(trainer.about_me ||
+        trainer.driving_license ||
+        trainer.dlrg_certificate) && (
         <section className="space-y-6 py-6">
           {trainer.about_me && (
             <motion.div
@@ -184,13 +216,21 @@ const TrainerProfile = ({ trainer }: { trainer: any }) => {
           {(trainer.driving_license || trainer.dlrg_certificate) && (
             <div className="flex space-x-2">
               {trainer.driving_license && (
-                <Badge initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                <Badge
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
                   {t("Driving license")}
                 </Badge>
               )}
 
               {trainer.dlrg_certificate && (
-                <Badge initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                <Badge
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
                   {t("DLRG certificate")}
                 </Badge>
               )}
@@ -200,7 +240,12 @@ const TrainerProfile = ({ trainer }: { trainer: any }) => {
       )}
 
       {trainer.trainer_skills?.length > 0 && (
-        <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="py-6">
+        <motion.section
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="py-6"
+        >
           <h3 className="text-xl font-semibold">{t("Skills")}</h3>
           <ul className="mt-2 flex flex-wrap gap-2">
             {trainer.trainer_skills?.map((trainerSkill: any) => {
@@ -214,10 +259,19 @@ const TrainerProfile = ({ trainer }: { trainer: any }) => {
         </motion.section>
       )}
 
-      <motion.section initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="py-6">
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="py-6"
+      >
         <h3 className="text-xl font-semibold">{t("Availability")}</h3>
 
-        <TrainerAvailCalendar className="mt-2" trainerId={trainer.id} monthDate={Date.now()} />
+        <TrainerAvailCalendar
+          className="mt-2"
+          trainerId={trainer.id}
+          monthDate={Date.now()}
+        />
       </motion.section>
     </motion.div>
   );

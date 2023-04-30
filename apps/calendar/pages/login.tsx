@@ -38,14 +38,17 @@ const LoginPage = () => {
 
   const initialValues: LoginValues = { email: "" };
 
-  const handleEmailSubmit = async (values: LoginValues, helpers: FormikHelpers<LoginValues>) => {
+  const handleEmailSubmit = async (
+    values: LoginValues,
+    helpers: FormikHelpers<LoginValues>
+  ) => {
     const { error } = await supabaseClient.auth.signIn(
       {
         email: values.email,
       },
       {
         redirectTo: process.env.NEXT_PUBLIC_SUPABASE_REDIRECT_TO,
-      },
+      }
     );
 
     helpers.setSubmitting(false);
@@ -59,7 +62,10 @@ const LoginPage = () => {
   };
 
   return (
-    <AuthDialog title={t("Shift plan")} subtitle={t("Welcome to the shift plan")}>
+    <AuthDialog
+      title={t("Shift plan")}
+      subtitle={t("Welcome to the shift plan")}
+    >
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -67,9 +73,15 @@ const LoginPage = () => {
       >
         <Formik initialValues={initialValues} onSubmit={handleEmailSubmit}>
           <Form className="space-y-2">
-            <TextField label={t("Continue with email")} name="email" type="email" />
+            <TextField
+              label={t("Continue with email")}
+              name="email"
+              type="email"
+            />
 
-            <SubmitButton icon={<SparklesIcon />}>{t("Get a Magic Link")}</SubmitButton>
+            <SubmitButton icon={<SparklesIcon />}>
+              {t("Get a Magic Link")}
+            </SubmitButton>
           </Form>
         </Formik>
       </motion.div>

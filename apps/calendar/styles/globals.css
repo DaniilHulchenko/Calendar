@@ -45,3 +45,69 @@
 .date-picker__portal .react-datepicker__input-container {
   visibility: hidden;
 }
+.calendar-week .fc-event {
+  background: white;
+  border: 1px solid white;
+}
+.calendar-week .fc-col-header  {
+  /* margin: 23px 0px 0px;
+  width: 1496px;
+  font-weight: 500;
+  text-transform: uppercase;
+  border-bottom: 1px #dddddd solid; */
+  /* border-right: 1px gray solid; */
+
+}
+.calendar-week .fc-day{
+  /* width: 240px;
+    padding: 0 5px;
+    border-right: 1px solid #dddddd; */
+}
+.calendar-week tr[role='row']{
+  /* display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column; */
+}
+.calendar-week .fc-daygrid-day{
+  /* height: 100vh; */
+}
+.calendar-week .fc-col-header-cell{
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 2px 0
+}
+.rbc-time-view .rbc-label {
+display: none;
+}
+.rbc-time-view .rbc-time-content {
+display: none;
+}
+.rbc-time-view .rbc-row-content{
+  height: 100vh;
+}
+.calendar-week .rbc-toolbar{
+display: none;
+}
+.calendar-week .rbc-time-header-cell{
+  height: 34px;
+}
+.rbc-day-bg{
+  background: rgb(250, 250, 250)
+}
+.calendar-week .rbc-event{
+  background: none;
+padding: 0;
+  box-shadow: 0px 5px 5px rgba(81, 81, 81, 0.14);
+}
+.calendar-week .rbc-header{
+  background: rgb(250, 250, 250);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.calendar-week span[role="columnheader"]{
+  text-transform: uppercase;
+}

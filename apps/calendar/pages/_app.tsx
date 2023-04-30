@@ -2,7 +2,12 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../styles/globals.css";
 import "tailwind-config/global.css";
 import type { AppProps } from "next/app";
-import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import store from "data/redux/store";
 import SupabaseUserProvider from "components/auth/SupabaseUserProvider";
@@ -22,14 +27,16 @@ const CalendarApp = ({ Component, pageProps }: AppProps<AppPageProps>) => {
 
   useEffect(() => {
     const onError = (error: unknown) => {
-      toast.error(error instanceof Error ? error.message : t("Something went wrong"));
+      toast.error(
+        error instanceof Error ? error.message : t("Something went wrong")
+      );
     };
 
     setQueryClient(
       new QueryClient({
         queryCache: new QueryCache({ onError }),
         mutationCache: new MutationCache({ onError }),
-      }),
+      })
     );
   }, [t]);
 
@@ -44,7 +51,9 @@ const CalendarApp = ({ Component, pageProps }: AppProps<AppPageProps>) => {
         <QueryClientProvider client={queryClient}>
           <Provider store={store}>
             <SupabaseAuthProvider>
-              <SupabaseUserProvider requireAuth={appPageProps.requireAuth ?? true}>
+              <SupabaseUserProvider
+                requireAuth={appPageProps.requireAuth ?? true}
+              >
                 <Component {...appPageProps} />
               </SupabaseUserProvider>
             </SupabaseAuthProvider>

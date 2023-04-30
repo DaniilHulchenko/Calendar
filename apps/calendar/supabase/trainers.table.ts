@@ -17,7 +17,7 @@ const table = "trainers";
 
 const createNameTraienrs = () => [table];
 
-export const useTrainers = (id: string) =>
+export const useTrainers = () =>
   useQuery(createNameTraienrs(), async () => {
     const response = await supabaseClient.from(table).select("*, profiles(*), avatars(*), trainer_skills(*)");
     const skills = await supabaseClient.from("skills").select("*");
@@ -34,7 +34,7 @@ export const useTrainers = (id: string) =>
       });
       return [{ ...trainer, trainer_skills: trainer_skills }];
     });
-    return trainers[0];
+    return trainers.flat();
   });
 
 export const selectTrainers = () =>

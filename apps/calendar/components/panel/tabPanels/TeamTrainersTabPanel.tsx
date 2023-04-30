@@ -30,7 +30,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CellContext } from "components/auth/CellProvider";
 import { terminateTrainerConflict } from "supabase/lead_conflict";
 import { useLeadQuery } from "loading/queries/useLeadsQuery";
-import { sendEmail } from "config/email";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 
@@ -78,10 +77,6 @@ const TeamTrainersTabPanel = ({
   };
 
   const queryClient = useQueryClient();
-
-  const sendEmailHTML = (leadName: string, date: string) => {
-    return `<div><p>You have been terminated from the Lead: ${leadName}(${date})</p></div>`;
-  };
 
   // createNameLeadTeam
   const deleteTrainer = useMutation({
@@ -150,28 +145,7 @@ const TeamTrainersTabPanel = ({
     setTermianted(true);
     cellContext.setUpdated?.(true);
     deleteTrainer.mutate({ leadId: cellId, trainerId: id });
-    teamWithEmail.data?.forEach((team) => {
-      if (team.id_profiles === id) {
-        sendEmail(
-          team.users.email,
-          sendEmailHTML(
-            lead.data?.[0].event_title
-              ? `${lead.data?.[0].event_title} - ${lead.data?.[0].customer_name}`
-              : lead.data?.[0].customer_name,
-            `${format(
-              new Date(lead.data?.[0].arrival_at || ""),
-              "dd-MM-yyyy"
-            )} - ${format(
-              new Date(
-                lead.data?.[0].departure || lead.data?.[0].arrival_at || ""
-              ),
-              "dd-MM-yyyy"
-            )}`
-          ),
-          `You have been terminated from the Lead`
-        );
-      }
-    });
+    teamWithEmail.data?.forEach((team) => {});
     terminateTrainerConflict(
       new Date(lead.data?.[0].arrival_at),
       +lead.data?.[0].id,
