@@ -65,7 +65,6 @@ import {
   useLeadsConflictQuery,
 } from "supabase/lead_conflict";
 import { Lead } from "supabase/leads.table";
-import { sendEmail } from "config/email";
 
 type PanelControls = {
   open: boolean;
@@ -417,11 +416,6 @@ function ApplicationTrainersTabPanel({
                 ]);
                 trainersQuery.refetch();
                 conflictedTrainer.refetch();
-                sendEmail(
-                  trainerEmail,
-                  sendEmailHTML(currentLead, date),
-                  "You have been reserved for the Lead"
-                );
               } else {
                 toast.error(t("The trainer is currently unavailable"));
               }
@@ -473,9 +467,7 @@ function ApplicationTrainersTabPanel({
       toast.error(t("Something went wrong"));
     },
   });
-  const sendEmailHTML = (leadName: string, date: string) => {
-    return `<div><p>You have been reserved for the Lead: ${leadName}(${date})</p></div>`;
-  };
+
   const reserveHandler = (trainerId: string, trainerEmail: string) => {
     const isAvailTrainer = availsTrainers?.filter(
       (trainer) => trainer.id === trainerId
@@ -515,11 +507,6 @@ function ApplicationTrainersTabPanel({
     ) {
       reserveTrainerMutation.mutate({ trainerId: trainerId, leadId: +cellId });
       cellContext.setUpdated?.(true);
-      sendEmail(
-        trainerEmail,
-        sendEmailHTML(currentLead, date),
-        "You have been reserved for the Lead"
-      );
     } else {
       toast.error(t("The team is complete"));
     }
@@ -597,10 +584,6 @@ function InsideTrainersTabPanel({
   const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(
     typeof day === "string" ? day : ""
   );
-
-  const sendEmailHTML = (leadName: string, date: string) => {
-    return `<div><p>You have been reserved for the Lead: ${leadName}(${date})</p></div>`;
-  };
 
   const trainerLeads = useTrainerLeadQuery(
     (Array.isArray(cellId) ? cellId[0] : cellId) || "0"
@@ -712,11 +695,6 @@ function InsideTrainersTabPanel({
                 conflictedTrainer.refetch();
                 team.refetch();
                 teams.refetch();
-                sendEmail(
-                  trainerEmail,
-                  sendEmailHTML(currentLead, date),
-                  "You have been reserved for the Lead"
-                );
               } else {
                 toast.error(t("The trainer is currently unavailable"));
               }
@@ -788,11 +766,6 @@ function InsideTrainersTabPanel({
       setInvitationProccess({ id: trainerId, proccess: true, success: false });
       inviteTrainer.mutate({ id_trainer: trainerId, leadId, arrivalAtLead });
       trainerEmail;
-      sendEmail(
-        trainerEmail,
-        sendEmailHTML(currentLead, date),
-        "You have been reserved for the Lead"
-      );
     } else {
       toast.error(t("The trainer is currently unavailable"));
     }

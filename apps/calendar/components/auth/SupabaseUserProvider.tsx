@@ -1,4 +1,11 @@
-import { createContext, Fragment, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Fragment,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import { useSupabaseAuth } from "./SupabaseAuthProvider";
 import RoleProvider, { useRole } from "./RoleProvider";
@@ -15,7 +22,13 @@ import classNames from "classnames";
 
 const SupabaseUserContext = createContext<RoleUser | undefined>(undefined);
 
-const SupabaseUserProvider = ({ requireAuth, children }: { requireAuth: boolean | undefined; children: ReactNode }) => {
+const SupabaseUserProvider = ({
+  requireAuth,
+  children,
+}: {
+  requireAuth: boolean | undefined;
+  children: ReactNode;
+}) => {
   const router = useRouter();
   const auth = useSupabaseAuth();
 
@@ -51,7 +64,9 @@ export const useSupabaseUser = () => {
   const user = useContext(SupabaseUserContext);
 
   if (user === undefined) {
-    throw new Error("useSupabaseUser must be used within a SupabaseUserProvider");
+    throw new Error(
+      "useSupabaseUser must be used within a SupabaseUserProvider"
+    );
   }
 
   return user;
@@ -68,7 +83,7 @@ function SidebarLayout({ children }: { children: ReactNode }) {
       {open !== undefined && (
         <motion.nav
           className={classNames(
-            "absolute bottom-0 z-30 max-h-screen w-full shrink-0 overflow-hidden border-r border-indigo-800 bg-indigo-900 shadow-2xl sm:static sm:mt-0 sm:w-[80px] lg:w-[240px]",
+            "absolute bottom-0 z-30 max-h-screen w-full shrink-0 overflow-hidden border-r border-indigo-800 bg-indigo-900 shadow-2xl sm:static sm:mt-0 sm:w-[80px] lg:w-[240px]"
           )}
           whileHover={"opened"}
         >
@@ -89,7 +104,9 @@ function SidebarLayout({ children }: { children: ReactNode }) {
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2, type: "just" }}
                 >
-                  <h1 className="text-md hidden font-bold text-white lg:block lg:text-lg">{t("Shift plan")}</h1>
+                  <h1 className="text-md hidden font-bold text-white lg:block lg:text-lg">
+                    {t("Shift plan")}
+                  </h1>
 
                   <div className=" ml-2 text-sm font-bold text-white sm:ml-0 sm:px-0 sm:font-semibold sm:text-indigo-300 lg:m-0">
                     Zaruba Denys
@@ -105,7 +122,11 @@ function SidebarLayout({ children }: { children: ReactNode }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, type: "just" }}
             >
-              <SidebarLink href="/week" icon={<OutlineCalendarIcon />} text={t("Calendar")} />
+              <SidebarLink
+                href="/week"
+                icon={<OutlineCalendarIcon />}
+                text={t("Calendar")}
+              />
             </motion.div>
 
             <AdminNavigation />
@@ -116,7 +137,11 @@ function SidebarLayout({ children }: { children: ReactNode }) {
               transition={{ delay: 0.5, type: "just" }}
               className="max-w-sm py-2 sm:w-full sm:py-6"
             >
-              <SidebarLink href="/profile" icon={<UserIcon />} text={t("Profile")} />
+              <SidebarLink
+                href="/profile"
+                icon={<UserIcon />}
+                text={t("Profile")}
+              />
             </motion.div>
           </div>
         </motion.nav>
@@ -138,9 +163,17 @@ function AdminNavigation() {
       transition={{ delay: 0.3, type: "just" }}
     >
       <Fragment>
-        <SidebarLink href="/trainers" icon={<UsersIcon />} text={t("Trainers")} />
+        <SidebarLink
+          href="/trainers"
+          icon={<UsersIcon />}
+          text={t("Trainers")}
+        />
 
-        <SidebarLink href="/program-blocks" icon={<PuzzleIcon />} text={t("Program blocks")} />
+        <SidebarLink
+          href="/program-blocks"
+          icon={<PuzzleIcon />}
+          text={t("Program blocks")}
+        />
       </Fragment>
     </motion.div>
   );

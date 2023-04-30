@@ -34,7 +34,9 @@ const CalendarLayout = ({ children }: { children: ReactNode }) => {
       <CalendarHeader />
 
       <div className="date-picker relative grow overflow-x-auto">
-        <div className="show-program-blocks absolute h-full w-full min-w-[1536px]">{children}</div>
+        <div className="show-program-blocks absolute h-full w-full min-w-[1536px]">
+          {children}
+        </div>
       </div>
       <CreateLead />
     </main>
@@ -91,7 +93,8 @@ function CalendarHeader() {
       router.query.cellId && setOpenedModal(false);
       if (
         (e.target && e.target.closest(".date-picker__button")) ||
-        (!e.target.closest(".react-datepicker__day") && e.target.closest(".react-datepicker"))
+        (!e.target.closest(".react-datepicker__day") &&
+          e.target.closest(".react-datepicker"))
       ) {
         setOpenedModal(true);
       } else {
@@ -108,7 +111,8 @@ function CalendarHeader() {
         router.query.cellId && setOpenedModal(false);
         if (
           (e.target && e.target.closest(".date-picker__button")) ||
-          (!e.target.closest(".react-datepicker__day") && e.target.closest(".react-datepicker"))
+          (!e.target.closest(".react-datepicker__day") &&
+            e.target.closest(".react-datepicker"))
         ) {
           setOpenedModal(true);
         } else {
@@ -152,7 +156,7 @@ function CalendarHeader() {
           "absolute flex min-h-0 w-full flex-1 flex-row items-center gap-2 overflow-auto whitespace-nowrap border-b border-gray-200 bg-white p-2 ",
           {
             "overflow-hidden": openedModal,
-          },
+          }
         )}
       >
         <div className="flex grow items-center">
@@ -206,7 +210,10 @@ function CalendarHeader() {
                     router.replace({
                       query: {
                         ...router.query,
-                        start: format(date !== null ? date : new Date(), "yyyy-MM-dd"),
+                        start: format(
+                          date !== null ? date : new Date(),
+                          "yyyy-MM-dd"
+                        ),
                       },
                     });
                   }}
@@ -224,8 +231,12 @@ function CalendarHeader() {
             { label: "Applied", value: "Applied" },
           ]}
           onClick={(v) => {
-            v.includes("Applied") ? cellContext.toggleApply?.(true) : cellContext.toggleApply?.(false);
-            v.includes("Assigned") ? cellContext.toggleAssing?.(true) : cellContext.toggleAssing?.(false);
+            v.includes("Applied")
+              ? cellContext.toggleApply?.(true)
+              : cellContext.toggleApply?.(false);
+            v.includes("Assigned")
+              ? cellContext.toggleAssing?.(true)
+              : cellContext.toggleAssing?.(false);
           }}
           onChange={(v) => {
             cellContext.setUpdated?.(true);
@@ -308,6 +319,7 @@ export const PortalDatePicker = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </div>,
-    document.querySelector(".date-picker") || (document.querySelector("#__next") as HTMLElement),
+    document.querySelector(".date-picker") ||
+      (document.querySelector("#__next") as HTMLElement)
   );
 };

@@ -21,8 +21,6 @@ const ProfileAvatar = ({
   opacity?: number;
 }) => {
   const queryClient = useQueryClient();
-  console.log(url);
-
   const urlQuery = useQuery({
     queryKey: ["avatars-storage", url],
     queryFn: () => getAvatarUrl(url),
@@ -30,7 +28,11 @@ const ProfileAvatar = ({
   let u;
   useEffect(() => {
     const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
-      if (event?.type === "removed" && _.isEqual(event.query.queryKey, ["avatars-storage", url]) && urlQuery.data) {
+      if (
+        event?.type === "removed" &&
+        _.isEqual(event.query.queryKey, ["avatars-storage", url]) &&
+        urlQuery.data
+      ) {
         URL.revokeObjectURL(url ? url : urlQuery.data);
       }
     });
@@ -39,8 +41,6 @@ const ProfileAvatar = ({
       unsubscribe();
     };
   }, [urlQuery.data, queryClient, url]);
-  console.log(u, URL);
-
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -49,7 +49,7 @@ const ProfileAvatar = ({
         "flex shrink-0 items-center justify-center",
         "overflow-hidden rounded-full text-indigo-400 shadow-inner transition",
         small ? "h-10 w-10" : "h-40 w-40",
-        className,
+        className
       )}
     >
       {skeleton || urlQuery.isLoading ? (
@@ -57,7 +57,13 @@ const ProfileAvatar = ({
       ) : (
         <Fragment>
           {urlQuery.data ? (
-            <Image src={urlQuery.data} alt="Avatar" width={160} height={160} className="block" />
+            <Image
+              src={urlQuery.data}
+              alt="Avatar"
+              width={160}
+              height={160}
+              className="block"
+            />
           ) : (
             <UserCircleIcon className="h-10 w-10" />
           )}

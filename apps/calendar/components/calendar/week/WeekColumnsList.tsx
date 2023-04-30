@@ -263,15 +263,15 @@ const WeekColumnsList = () => {
       "en-US": enUS,
     },
   });
-  if (cellContext.updated) {
-    return (
-      <div className="relative h-[100vh] w-full bg-white p-1">
-        <div className="absolute top-[50%] left-[50%] h-[200px] w-[200px]">
-          <LoaderIcon />
-        </div>
-      </div>
-    );
-  }
+  // if (cellContext.updated) {
+  //   return (
+  //     <div className="relative h-[100vh] w-full bg-white p-1">
+  //       <div className="absolute top-[50%] left-[50%] h-[200px] w-[200px]">
+  //         <LoaderIcon />
+  //       </div>
+  //     </div>
+  //   );
+  // }
   return (
     <>
       <div className=" calendar-week [&.fc-event]:  w-full shadow-md [&>*]:bg-white [&.fc-header-title]:text-black">
