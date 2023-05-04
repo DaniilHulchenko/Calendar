@@ -68,7 +68,22 @@ const trainersGql = gql`
     }
   }
 `;
-
+// profile {
+//   name
+//   contact
+//   avatar {
+//     url
+//   }
+//   user {
+//     email
+//   }
+// }
+// trainer_skills {
+//   id
+//   skill {
+//     name
+//   }
+// }
 const useHasuraClient = () => {
   const auth = useSupabaseAuth();
 
@@ -77,9 +92,10 @@ const useHasuraClient = () => {
       throw new Error("Not authenticated");
     }
 
-    return new GraphQLClient("https://schichtplan.hasura.app/v1/graphql", {
+    return new GraphQLClient("https://just-halibut-63.hasura.app/v1/graphql", {
       headers: {
         Authorization: `Bearer ${auth.session.access_token}`,
+        "x-hasura-admin-secret": "gUSii4iheV2X6N3zF0KU4FAqrTPzD5jYzYv0GbxYweL0Gli9SSvWZlHG6SuwDZ4n",
       },
     });
   }, [auth.session]);
