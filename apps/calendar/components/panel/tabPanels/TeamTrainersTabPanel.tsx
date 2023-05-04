@@ -13,11 +13,7 @@ import {
   useTrainerLeadQuery,
   useTrainersJoin,
 } from "supabase/trainer_lead.table";
-import {
-  HasuraTrainer,
-  useHasuraAvailTrainersQuery,
-  useHasuraTrainersQuery,
-} from "loading/queries/hasura";
+import { HasuraTrainer, useHasuraAvailTrainersQuery, useHasuraTrainersQuery } from "loading/queries/hasura";
 import ProfileAvatar from "components/layout/ProfileAvatar";
 import { useContext, useMemo, useState } from "react";
 import Button from "ui/buttons/Button";
@@ -43,9 +39,7 @@ const TeamTrainersTabPanel = ({
   availsTrainers: HasuraTrainer[] | undefined;
 }) => {
   const trainersQuery = useHasuraTrainersQuery("");
-  const trainerLeads = useTrainerLeadQuery(
-    (Array.isArray(cellId) ? cellId[0] : cellId) || "0"
-  );
+  const trainerLeads = useTrainerLeadQuery((Array.isArray(cellId) ? cellId[0] : cellId) || "0");
   const cellContext = useContext(CellContext);
   const teams = useLeadsTeam();
   const teamWithEmail = useLeadTeamWithEmail(+cellId);
@@ -57,9 +51,7 @@ const TeamTrainersTabPanel = ({
   const [deletedTrainer, setDeletedTrainer] = useState<string>();
   const router = useRouter();
   const { day } = router.query;
-  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(
-    typeof day === "string" ? day : ""
-  );
+  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(typeof day === "string" ? day : "");
   const t = useTranslation();
 
   const user = useSupabaseUser();
@@ -82,14 +74,9 @@ const TeamTrainersTabPanel = ({
   const deleteTrainer = useMutation({
     mutationFn: deleteTrainerLead,
     onSuccess: (updatedTeam: any) => {
-      queryClient.setQueryData(
-        createNameLeadTeam(+cellId),
-        (oldTeam: any[] = []) => {
-          return oldTeam.filter(
-            (team) => team.id_profiles !== updatedTeam[0].id_profiles
-          );
-        }
-      );
+      queryClient.setQueryData(createNameLeadTeam(+cellId), (oldTeam: any[] = []) => {
+        return oldTeam.filter((team) => team.id_profiles !== updatedTeam[0].id_profiles);
+      });
       trainersQuery.refetch();
       acceptedTrainers.refetch();
       trainerLeads.refetch();
@@ -107,9 +94,7 @@ const TeamTrainersTabPanel = ({
   });
 
   const handleJoin = async (trainerId: string) => {
-    const isAvailTrainer = availsTrainers?.filter(
-      (trainer) => trainer.id === trainerId
-    );
+    const isAvailTrainer = availsTrainers?.filter((trainer) => trainer.id === trainerId);
 
     if (!isAvailTrainer || isAvailTrainer?.length === 0) {
       toast.error(t("You are not available at this day"));
@@ -118,9 +103,7 @@ const TeamTrainersTabPanel = ({
 
     setJoin(false);
     setJoinFetch(true);
-    const accepted = acceptedTrainers.data?.filter(
-      (acceptedTraienrs) => acceptedTraienrs.id_trainers === user.id
-    );
+    const accepted = acceptedTrainers.data?.filter((acceptedTraienrs) => acceptedTraienrs.id_trainers === user.id);
 
     const result =
       Array.isArray(accepted) && accepted.length === 0
@@ -134,10 +117,7 @@ const TeamTrainersTabPanel = ({
     } else {
       setJoinFetch(false);
       setJoin(false);
-      Array.isArray(result) &&
-        toast.error(
-          t("The request to join in the event has already been sent")
-        );
+      Array.isArray(result) && toast.error(t("The request to join in the event has already been sent"));
     }
   };
 
@@ -146,11 +126,7 @@ const TeamTrainersTabPanel = ({
     cellContext.setUpdated?.(true);
     deleteTrainer.mutate({ leadId: cellId, trainerId: id });
     teamWithEmail.data?.forEach((team) => {});
-    terminateTrainerConflict(
-      new Date(lead.data?.[0].arrival_at),
-      +lead.data?.[0].id,
-      id
-    );
+    terminateTrainerConflict(new Date(lead.data?.[0].arrival_at), +lead.data?.[0].id, id);
   };
   const team = useMemo(() => {
     const result: {
@@ -165,10 +141,7 @@ const TeamTrainersTabPanel = ({
     }[] = [];
     trainersQuery.data?.forEach((trainer) => {
       const acceptedId = acceptedTrainers.data?.filter((acceptedTrainer) => {
-        if (
-          acceptedTrainer.accepted &&
-          acceptedTrainer.id_profiles === trainer.id
-        )
+        if (acceptedTrainer.accepted && acceptedTrainer.id_profiles === trainer.id)
           return {
             id: acceptedTrainer.id_profiles,
             terminate: acceptedTrainer.termiante,
@@ -197,32 +170,25 @@ const TeamTrainersTabPanel = ({
             </Button>
           )}
         </div>
-        <TrainersList
-          skeleton={trainersQuery.isLoading || acceptedTrainers.isLoading}
-        >
+        <TrainersList skeleton={trainersQuery.isLoading || acceptedTrainers.isLoading}>
           {team.length > 0
             ? team?.map((trainer) => (
                 <div key={trainer.id} className="flex justify-between">
                   <TrainersListItem
-                    circle={
-                      <ProfileAvatar url={trainer.profile?.avatar?.url} small />
-                    }
-                    title={
-                      trainer.profile?.name || trainer.profile?.user?.email
-                    }
+                    circle={<ProfileAvatar url={trainer.profile?.avatar?.url} small />}
+                    title={trainer.profile?.name || trainer.profile?.user?.email}
                     description={trainer.profile?.contact}
                   />
-                  {role === "manager" &&
-                    (trainer.termiante || trainer.id === user.id) && (
-                      <Button
-                        type="button"
-                        variant="contained"
-                        icon={<BanIcon />}
-                        onClick={() => managerTerminateHandler(trainer.id)}
-                      >
-                        {t("Terminate")}
-                      </Button>
-                    )}
+                  {role === "manager" && (trainer.termiante || trainer.id === user.id) && (
+                    <Button
+                      type="button"
+                      variant="contained"
+                      icon={<BanIcon />}
+                      onClick={() => managerTerminateHandler(trainer.id)}
+                    >
+                      {t("Terminate")}
+                    </Button>
+                  )}
 
                   {trainer.id === user.id && role === "trainer" && (
                     <Button
@@ -232,9 +198,7 @@ const TeamTrainersTabPanel = ({
                       disabled={trainer.termiante || terminated}
                       onClick={terminateHandler}
                     >
-                      {trainer.termiante || terminated
-                        ? t("Terminated")
-                        : t("Terminate")}
+                      {trainer.termiante || terminated ? t("Terminated") : t("Terminate")}
                     </Button>
                   )}
                 </div>

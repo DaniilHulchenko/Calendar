@@ -53,14 +53,16 @@ export type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 const table = "leads";
 
-export const selectLeads = async (startTime: number, endTime: number) => {
-  const start = formatISO(startTime, { representation: "date" });
+export const selectLeads = async (startTime?: number, endTime?: number) => {
+  // const start = formatISO(startTime, { representation: "date" });
 
-  const end = formatISO(add(endTime, { days: 1 }), {
-    representation: "date",
-  });
+  // const end = formatISO(add(endTime, { days: 1 }), {
+  //   representation: "date",
+  // });
   //   return supabaseClient.from<Lead>(table).select("*").gte("arrival_at", start).lt("arrival_at", end);
-  return supabaseClient.from<Lead>(table).select("*").gte("departure", start).lt("arrival_at", end);
+  // console.log("start", start, end);
+
+  return supabaseClient.from<Lead>(table).select("*"); // .gte("departure", start).lt("arrival_at", end);
 };
 
 export const upsertLeads = async (leads: Lead[]) => {

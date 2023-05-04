@@ -7,11 +7,7 @@ import { useTranslation } from "components/translation";
 import cellSlice from "data/redux/slices/cellSlice";
 import { useAppDispatch, useAppSelector } from "data/redux/store";
 import { format, parseISO } from "date-fns";
-import {
-  HasuraTrainer,
-  useHasuraAvailTrainersQuery,
-  useHasuraTrainersQuery,
-} from "loading/queries/hasura";
+import { HasuraTrainer, useHasuraAvailTrainersQuery, useHasuraTrainersQuery } from "loading/queries/hasura";
 import { useRouter } from "next/router";
 import {
   createContext,
@@ -33,13 +29,7 @@ import HasuraTrainersListItem from "./trainers/HasuraTrainersListItem";
 import TrainersList from "./trainers/TrainersList";
 import useCellLead from "./useCellLead";
 import Button from "ui/buttons/Button";
-import {
-  ArchiveIcon,
-  BanIcon,
-  CheckIcon,
-  MailIcon,
-  SaveIcon,
-} from "@heroicons/react/outline";
+import { ArchiveIcon, BanIcon, CheckIcon, MailIcon, SaveIcon } from "@heroicons/react/outline";
 import useLeadsQuery, { useLeadQuery } from "loading/queries/useLeadsQuery";
 import {
   createNameTrainersJoin,
@@ -60,10 +50,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CellContext } from "components/auth/CellProvider";
 import DetailsListItem from "./details/DetailsListItem";
 import { leadFieldLabels } from "components/calendar/week/leadFormFields";
-import {
-  insertLeadsConflictMutation,
-  useLeadsConflictQuery,
-} from "supabase/lead_conflict";
+import { insertLeadsConflictMutation, useLeadsConflictQuery } from "supabase/lead_conflict";
 import { Lead } from "supabase/leads.table";
 
 type PanelControls = {
@@ -77,9 +64,7 @@ export const PanelProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useAppDispatch();
   const cellId = useAppSelector((state) => state.cell.id);
 
-  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
-    null
-  );
+  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(null);
 
   const [popperElement, setPopperElement] = useState<HTMLElement | null>(null);
 
@@ -119,10 +104,7 @@ export const PanelProvider = ({ children }: { children: ReactNode }) => {
     <PanelContext.Provider value={controls}>
       {children}
       <Transition appear show={referenceElement !== null} as={Fragment}>
-        <Dialog
-          className="fixed inset-0 z-50 overflow-y-auto"
-          onClose={handleClose}
-        >
+        <Dialog className="fixed inset-0 z-50 overflow-y-auto" onClose={handleClose}>
           <Transition.Child
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -134,11 +116,7 @@ export const PanelProvider = ({ children }: { children: ReactNode }) => {
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
           </Transition.Child>
           <div className="cell-panel">
-            <div
-              ref={setPopperElement}
-              style={styles.popper}
-              {...attributes.popper}
-            >
+            <div ref={setPopperElement} style={styles.popper} {...attributes.popper}>
               <Transition.Child
                 enter="transition ease-out duration-800"
                 enterFrom="opacity-0 -translate-x-4"
@@ -180,18 +158,12 @@ function CellPanel() {
   const role = useRole();
   const router = useRouter();
   const { cellId } = router.query;
-  const leadQuery = useLeadQuery(
-    cellId && !Array.isArray(cellId) ? +cellId : 0
-  );
+  const leadQuery = useLeadQuery(cellId && !Array.isArray(cellId) ? +cellId : 0);
 
   const tabs = useMemo(
     () =>
-      leadQuery?.data?.[0]?.special
-        ? ["Info"]
-        : role === "manager"
-        ? [...generalTabs, ...trainerTabs]
-        : generalTabs,
-    [role, leadQuery?.data]
+      leadQuery?.data?.[0]?.special ? ["Info"] : role === "manager" ? [...generalTabs, ...trainerTabs] : generalTabs,
+    [role, leadQuery?.data],
   );
 
   const dispatch = useAppDispatch();
@@ -204,9 +176,7 @@ function CellPanel() {
   const cellLead = useCellLead();
   const { day } = router.query;
 
-  const availsTrainers = useHasuraAvailTrainersQuery(
-    typeof day === "string" ? new Date(day) : new Date()
-  );
+  const availsTrainers = useHasuraAvailTrainersQuery(typeof day === "string" ? new Date(day) : new Date());
   useEffect(() => {
     const { tab } = router.query;
 
@@ -258,10 +228,8 @@ function CellPanel() {
                 className={({ selected }) =>
                   classNames(
                     "-mb-[1px] border-b-2 pb-2 text-sm font-medium uppercase leading-5 transition focus:outline-none",
-                    selected &&
-                      "cursor-default border-indigo-500 text-indigo-500",
-                    !selected &&
-                      "border-transparent text-gray-500 hover:text-indigo-500"
+                    selected && "cursor-default border-indigo-500 text-indigo-500",
+                    !selected && "border-transparent text-gray-500 hover:text-indigo-500",
                   )
                 }
               >
@@ -344,9 +312,7 @@ function ApplicationTrainersTabPanel({
   const conflictedTrainer = useLeadsConflictQuery();
   const leadsQuery = useLeadsQuery();
   const { mutate: inserConflictMutate } = insertLeadsConflictMutation();
-  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(
-    typeof day === "string" ? day : ""
-  );
+  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(typeof day === "string" ? day : "");
 
   let currentLead: string;
   let currentLeadData: Lead;
@@ -356,14 +322,12 @@ function ApplicationTrainersTabPanel({
   leadsQuery.data?.forEach((lead) => {
     if (lead.id === (cellId && !Array.isArray(cellId) && +cellId)) {
       leadId = `${lead.id}`;
-      currentLead = lead.event_title
-        ? `${lead.event_title} - ${lead.customer_name}`
-        : lead.customer_name;
+      currentLead = lead.event_title ? `${lead.event_title} - ${lead.customer_name}` : lead.customer_name;
       currentLeadData = lead;
       arrivalAtLead = lead.arrival_at;
       date = `${format(new Date(lead.arrival_at), "dd-MM-yyyy")} - ${format(
         new Date(lead.departure || lead.arrival_at),
-        "dd-MM-yyyy"
+        "dd-MM-yyyy",
       )}`;
     }
   });
@@ -378,25 +342,19 @@ function ApplicationTrainersTabPanel({
           return conflict;
         })
         .flat(),
-    [leadsQuery.data, possibleConflicredTrainer.data]
+    [leadsQuery.data, possibleConflicredTrainer.data],
   );
 
   const promptHTML = (
     dissmisId: string,
     isAvailTrainer: HasuraTrainer[] | undefined,
     trainerId: string,
-    trainerEmail: string
+    trainerEmail: string,
   ) => (
     <div className="w-[350px] bg-white">
-      <div>
-        {t(
-          "The trainer is already participating in one of the leads of the day"
-        )}
-      </div>
+      <div>{t("The trainer is already participating in one of the leads of the day")}</div>
       <div className="ml-[-30px]">
-        <div className="text-md my-1 text-center text-gray-500">
-          {t("Ignore")} ?
-        </div>
+        <div className="text-md my-1 text-center text-gray-500">{t("Ignore")} ?</div>
         <div className="flex justify-around">
           <Button
             onClick={() => {
@@ -427,12 +385,7 @@ function ApplicationTrainersTabPanel({
           >
             {t("Yes")}
           </Button>
-          <Button
-            onClick={() => toast.dismiss(dissmisId)}
-            variant="contained"
-            icon={<BanIcon />}
-            title="No"
-          >
+          <Button onClick={() => toast.dismiss(dissmisId)} variant="contained" icon={<BanIcon />} title="No">
             {t("No")}
           </Button>
         </div>
@@ -445,15 +398,11 @@ function ApplicationTrainersTabPanel({
   const reserveTrainerMutation = useMutation({
     mutationFn: reserveTrainer,
     onSuccess: (updatedReserveTrainer: any) => {
-      queryClient.setQueryData(
-        createNameTrainersJoin(+cellId),
-        (oldReserveTrainer: any[] = []) => {
-          return oldReserveTrainer.filter(
-            (oldlTrainer) =>
-              oldlTrainer.id_trainer !== updatedReserveTrainer[0].id_trainers
-          );
-        }
-      );
+      queryClient.setQueryData(createNameTrainersJoin(+cellId), (oldReserveTrainer: any[] = []) => {
+        return oldReserveTrainer.filter(
+          (oldlTrainer) => oldlTrainer.id_trainer !== updatedReserveTrainer[0].id_trainers,
+        );
+      });
       trainersJoin.refetch();
       acceptedTrainers.refetch();
       allLoined.refetch();
@@ -469,15 +418,13 @@ function ApplicationTrainersTabPanel({
   });
 
   const reserveHandler = (trainerId: string, trainerEmail: string) => {
-    const isAvailTrainer = availsTrainers?.filter(
-      (trainer) => trainer.id === trainerId
-    );
+    const isAvailTrainer = availsTrainers?.filter((trainer) => trainer.id === trainerId);
     if (!isAvailTrainer || isAvailTrainer.length === 0) {
       toast.error(t("The trainer is currently unavailable"));
       return;
     }
     const isConflictedTrainer = possibleConflicredTrainer.data?.filter(
-      (conflicted) => conflicted.id_trainers === trainerId
+      (conflicted) => conflicted.id_trainers === trainerId,
     );
 
     if (isConflictedTrainer?.length && isConflictedTrainer?.length > 0) {
@@ -501,10 +448,7 @@ function ApplicationTrainersTabPanel({
       ));
       return;
     }
-    if (
-      acceptedTrainers.data &&
-      acceptedTrainers.data.length < maxTrainersEvent
-    ) {
+    if (acceptedTrainers.data && acceptedTrainers.data.length < maxTrainersEvent) {
       reserveTrainerMutation.mutate({ trainerId: trainerId, leadId: +cellId });
       cellContext.setUpdated?.(true);
     } else {
@@ -538,9 +482,7 @@ function ApplicationTrainersTabPanel({
                     variant="outlined"
                     icon={<MailIcon />}
                     disabled={reserveTrainerMutation.isLoading}
-                    onClick={() =>
-                      reserveHandler(trainer.id, trainer.profile.user.email)
-                    }
+                    onClick={() => reserveHandler(trainer.id, trainer.profile.user.email)}
                   >
                     {trainer.join ? t("Reserved") : t("Reserve")}
                   </Button>
@@ -581,13 +523,9 @@ function InsideTrainersTabPanel({
   const { day } = router.query;
   const { cellId } = router.query;
   const [isAllowInvite, setIsAllowInvite] = useState(false);
-  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(
-    typeof day === "string" ? day : ""
-  );
+  const possibleConflicredTrainer = usePossibleConflictedTrainerTeam(typeof day === "string" ? day : "");
 
-  const trainerLeads = useTrainerLeadQuery(
-    (Array.isArray(cellId) ? cellId[0] : cellId) || "0"
-  );
+  const trainerLeads = useTrainerLeadQuery((Array.isArray(cellId) ? cellId[0] : cellId) || "0");
   let currentLead: string;
   let currentLeadData: Lead;
   let date: string;
@@ -596,14 +534,12 @@ function InsideTrainersTabPanel({
   leadsQuery.data?.forEach((lead) => {
     if (lead.id === (cellId && !Array.isArray(cellId) && +cellId)) {
       leadId = `${lead.id}`;
-      currentLead = lead.event_title
-        ? `${lead.event_title} - ${lead.customer_name}`
-        : lead.customer_name;
+      currentLead = lead.event_title ? `${lead.event_title} - ${lead.customer_name}` : lead.customer_name;
       currentLeadData = lead;
       arrivalAtLead = lead.arrival_at;
       date = `${format(new Date(lead.arrival_at), "dd-MM-yyyy")} - ${format(
         new Date(lead.departure || lead.arrival_at),
-        "dd-MM-yyyy"
+        "dd-MM-yyyy",
       )}`;
     }
   });
@@ -618,7 +554,7 @@ function InsideTrainersTabPanel({
           return conflict;
         })
         .flat(),
-    [leadsQuery.data, possibleConflicredTrainer.data]
+    [leadsQuery.data, possibleConflicredTrainer.data],
   );
   const team = useLeadTeam(leadId ? +leadId : 0);
   const teams = useLeadsTeam();
@@ -630,7 +566,7 @@ function InsideTrainersTabPanel({
     onSuccess: (invitedTrainer: any) => {
       queryClient.setQueryData(
         trainerLeadName(cellId && !Array.isArray(cellId) ? cellId : "0"),
-        (oldInvitedTrainer = []) => oldInvitedTrainer
+        (oldInvitedTrainer = []) => oldInvitedTrainer,
       );
       trainersQuery.refetch();
       trainerLeads.refetch();
@@ -655,18 +591,12 @@ function InsideTrainersTabPanel({
     trainerId: string,
     leadId: string,
     arrivalAtLead: string,
-    trainerEmail: string
+    trainerEmail: string,
   ) => (
     <div className="w-[350px] bg-white">
-      <div>
-        {t(
-          "The trainer is already participating in one of the leads of the day"
-        )}
-      </div>
+      <div>{t("The trainer is already participating in one of the leads of the day")}</div>
       <div className="ml-[-30px]">
-        <div className="text-md my-1 text-center text-gray-500">
-          {t("Ignore")} ?
-        </div>
+        <div className="text-md my-1 text-center text-gray-500">{t("Ignore")} ?</div>
         <div className="flex justify-around">
           <Button
             onClick={() => {
@@ -706,12 +636,7 @@ function InsideTrainersTabPanel({
           >
             {t("Yes")}
           </Button>
-          <Button
-            onClick={() => toast.dismiss(dissmisId)}
-            variant="contained"
-            icon={<BanIcon />}
-            title="No"
-          >
+          <Button onClick={() => toast.dismiss(dissmisId)} variant="contained" icon={<BanIcon />} title="No">
             {t("No")}
           </Button>
         </div>
@@ -719,17 +644,10 @@ function InsideTrainersTabPanel({
     </div>
   );
 
-  const inviteHandler = async (
-    trainerId: string,
-    leadId: string,
-    arrivalAtLead: string,
-    trainerEmail: string
-  ) => {
-    const isAvailTrainer = availsTrainers?.filter(
-      (trainer) => trainer.id === trainerId
-    );
+  const inviteHandler = async (trainerId: string, leadId: string, arrivalAtLead: string, trainerEmail: string) => {
+    const isAvailTrainer = availsTrainers?.filter((trainer) => trainer.id === trainerId);
     const isConflictedTrainer = possibleConflicredTrainer.data?.filter(
-      (conflicted) => conflicted.id_trainers === trainerId
+      (conflicted) => conflicted.id_trainers === trainerId,
     );
 
     if (isConflictedTrainer?.length && isConflictedTrainer?.length > 0) {
@@ -748,14 +666,7 @@ function InsideTrainersTabPanel({
           <div className="mr-3 mt-[15px] items-start">
             <ToastIcon toast={t} />
           </div>
-          {promptHTML(
-            t.id,
-            isAvailTrainer,
-            trainerId,
-            leadId,
-            arrivalAtLead,
-            trainerEmail
-          )}
+          {promptHTML(t.id, isAvailTrainer, trainerId, leadId, arrivalAtLead, trainerEmail)}
         </Transition>
       ));
 
@@ -771,11 +682,7 @@ function InsideTrainersTabPanel({
     }
   };
 
-  const { trainers } = useTrainersRefactor(
-    trainersQuery.data || [],
-    trainerLeads.data || [],
-    leadId || "0"
-  );
+  const { trainers } = useTrainersRefactor(trainersQuery.data || [], trainerLeads.data || [], leadId || "0");
 
   return (
     <Tab.Panel className="flex flex-col overflow-hidden">
@@ -788,10 +695,8 @@ function InsideTrainersTabPanel({
 
       <TrainersList skeleton={trainersQuery.isLoading}>
         {trainers?.map((trainer) => {
-          const isProccess =
-            invitationProccess.id === trainer.id && invitationProccess.proccess;
-          const isSuccess =
-            invitationProccess.id === trainer.id && invitationProccess.success;
+          const isProccess = invitationProccess.id === trainer.id && invitationProccess.proccess;
+          const isSuccess = invitationProccess.id === trainer.id && invitationProccess.success;
 
           return (
             <div key={trainer.id} className="flex justify-between">
@@ -799,13 +704,7 @@ function InsideTrainersTabPanel({
               <Button
                 type="button"
                 variant="outlined"
-                icon={
-                  isSuccess || trainer?.accepted === null ? (
-                    <CheckIcon />
-                  ) : (
-                    <MailIcon />
-                  )
-                }
+                icon={isSuccess || trainer?.accepted === null ? <CheckIcon /> : <MailIcon />}
                 disabled={
                   (team.data && team.data.length >= maxTrainersEvent) ||
                   isProccess ||
@@ -813,17 +712,10 @@ function InsideTrainersTabPanel({
                   trainer?.accepted === null
                 }
                 onClick={() =>
-                  inviteHandler(
-                    trainer.id,
-                    leadId || "0",
-                    arrivalAtLead || "",
-                    trainer.profile.user.email
-                  )
+                  inviteHandler(trainer.id, leadId || "0", arrivalAtLead || "", trainer.profile.user.email)
                 }
               >
-                {isSuccess || trainer?.accepted === null
-                  ? t("Reserved")
-                  : t("Reserve")}
+                {isSuccess || trainer?.accepted === null ? t("Reserved") : t("Reserve")}
               </Button>
             </div>
           );

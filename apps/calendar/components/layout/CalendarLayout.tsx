@@ -27,6 +27,9 @@ import classNames from "classnames";
 import { CalendarContainer } from "react-datepicker";
 import { CellContext } from "components/auth/CellProvider";
 import { CogIcon, UsersIcon } from "@heroicons/react/outline";
+import { getManager } from "config/getManager";
+import { useSupabaseUser } from "components/auth/SupabaseUserProvider";
+import toast from "react-hot-toast";
 
 const CalendarLayout = ({ children }: { children: ReactNode }) => {
   return (
@@ -34,9 +37,7 @@ const CalendarLayout = ({ children }: { children: ReactNode }) => {
       <CalendarHeader />
 
       <div className="date-picker relative grow overflow-x-auto">
-        <div className="show-program-blocks absolute h-full w-full min-w-[1536px]">
-          {children}
-        </div>
+        <div className="show-program-blocks absolute h-full w-full min-w-[1536px]">{children}</div>
       </div>
       <CreateLead />
     </main>
@@ -51,14 +52,16 @@ const CreateLead = () => {
   const t = useTranslation();
   if (role === "manager") {
     return (
-      <Button
-        className="w-fit-content absolute bottom-16 right-4 z-20 sm:bottom-4 sm:right-4"
-        onClick={() => cellContext.toggleOpenCreateLead?.(true)}
-        icon={<ViewGridAddIcon />}
-        variant="contained"
-      >
-        {t("Create lead")}
-      </Button>
+      <div>
+        <Button
+          className="w-fit-content absolute bottom-16 right-4 z-20 sm:bottom-4 sm:right-4"
+          onClick={() => cellContext.toggleOpenCreateLead?.(true)}
+          icon={<ViewGridAddIcon />}
+          variant="contained"
+        >
+          {t("Create lead")}
+        </Button>
+      </div>
     );
   } else return <></>;
 };
@@ -81,6 +84,8 @@ function CalendarHeader() {
   const [openedModal, setOpenedModal] = useState(false);
   const cellContext = useContext(CellContext);
 
+  const user = useSupabaseUser();
+
   useEffect(() => {
     if (query.data?.synced_at) {
       refetchLeads();
@@ -93,8 +98,7 @@ function CalendarHeader() {
       router.query.cellId && setOpenedModal(false);
       if (
         (e.target && e.target.closest(".date-picker__button")) ||
-        (!e.target.closest(".react-datepicker__day") &&
-          e.target.closest(".react-datepicker"))
+        (!e.target.closest(".react-datepicker__day") && e.target.closest(".react-datepicker"))
       ) {
         setOpenedModal(true);
       } else {
@@ -111,8 +115,7 @@ function CalendarHeader() {
         router.query.cellId && setOpenedModal(false);
         if (
           (e.target && e.target.closest(".date-picker__button")) ||
-          (!e.target.closest(".react-datepicker__day") &&
-            e.target.closest(".react-datepicker"))
+          (!e.target.closest(".react-datepicker__day") && e.target.closest(".react-datepicker"))
         ) {
           setOpenedModal(true);
         } else {
@@ -156,7 +159,7 @@ function CalendarHeader() {
           "absolute flex min-h-0 w-full flex-1 flex-row items-center gap-2 overflow-auto whitespace-nowrap border-b border-gray-200 bg-white p-2 ",
           {
             "overflow-hidden": openedModal,
-          }
+          },
         )}
       >
         <div className="flex grow items-center">
@@ -210,10 +213,7 @@ function CalendarHeader() {
                     router.replace({
                       query: {
                         ...router.query,
-                        start: format(
-                          date !== null ? date : new Date(),
-                          "yyyy-MM-dd"
-                        ),
+                        start: format(date !== null ? date : new Date(), "yyyy-MM-dd"),
                       },
                     });
                   }}
@@ -224,19 +224,27 @@ function CalendarHeader() {
         </div>
 
         {/* <SyncStatus startTime={weekBounds.startTime} /> */}
-
+        {role === "trainer" && (
+          <Button
+            className="w-fit-content z-20 sm:bottom-4 sm:right-4"
+            onClick={() => {
+              getManager(user.id);
+              toast.success(t("You have to log into your account"));
+            }}
+            icon={<ViewGridAddIcon />}
+            variant="contained"
+          >
+            {t("Get manager role")}
+          </Button>
+        )}
         <CheckBox
           options={[
             { label: "Assigned", value: "Assigned" },
             { label: "Applied", value: "Applied" },
           ]}
           onClick={(v) => {
-            v.includes("Applied")
-              ? cellContext.toggleApply?.(true)
-              : cellContext.toggleApply?.(false);
-            v.includes("Assigned")
-              ? cellContext.toggleAssing?.(true)
-              : cellContext.toggleAssing?.(false);
+            v.includes("Applied") ? cellContext.toggleApply?.(true) : cellContext.toggleApply?.(false);
+            v.includes("Assigned") ? cellContext.toggleAssing?.(true) : cellContext.toggleAssing?.(false);
           }}
           onChange={(v) => {
             cellContext.setUpdated?.(true);
@@ -319,7 +327,6 @@ export const PortalDatePicker = ({ children }: { children: ReactNode }) => {
     >
       {children}
     </div>,
-    document.querySelector(".date-picker") ||
-      (document.querySelector("#__next") as HTMLElement)
+    document.querySelector(".date-picker") || (document.querySelector("#__next") as HTMLElement),
   );
 };
