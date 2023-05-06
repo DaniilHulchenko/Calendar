@@ -10,14 +10,17 @@ import BioSection from "./sections/bio";
 import SkillsSection from "./sections/skills";
 import AvailSection from "./sections/avails";
 import ProgramBlockSection from "./sections/program-blocks";
+import { useSupabaseUser } from "components/auth/SupabaseUserProvider";
+import { supabaseClient } from "supabase/client";
 
 function TrainerContainer() {
   const t = useTranslation();
   const trainerQuery = useTrainerQuery();
   const trainerMutation = useTrainerMutation();
-
+  const user = useSupabaseUser();
   const handleCreateClick = useCallback(async () => {
-    await trainerMutation.mutateAsync({});
+    await supabaseClient.from("profiles").insert({ id: user.id }).single();
+    // await trainerMutation.mutateAsync({});
     toast.success(t("Trainer profile created"));
   }, [t, trainerMutation]);
 

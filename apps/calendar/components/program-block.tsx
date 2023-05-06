@@ -4,10 +4,7 @@ import Link from "next/link";
 import { ExternalLinkIcon } from "@heroicons/react/outline";
 import { LeadProgramBlockPopover } from "components/lead-program-block";
 import { WorkspacePopover } from "./layout";
-import {
-  ProgramBlock,
-  useProgramBlocksQuery,
-} from "supabase/program_blocks.table";
+import { ProgramBlock, useProgramBlocksQuery } from "supabase/program_blocks.table";
 import { useTranslation } from "./translation";
 import ReactDOM from "react-dom";
 import { ReactNode } from "react";
@@ -19,6 +16,7 @@ export function LeadProgramBlockList({
   leadId: number;
   programBlockNames: string | null | undefined;
 }) {
+
   const role = useRole();
   const programBlocksQuery = useProgramBlocksQuery();
 
@@ -38,18 +36,10 @@ export function LeadProgramBlockList({
     return (
       <ProgramBlockListLayout
         blocks={blockNames
-          .map((name) =>
-            programBlocksQuery.data?.find((block) => block.name === name)
-          )
+          .map((name) => programBlocksQuery.data?.find((block) => block.name === name))
           .filter((block): block is ProgramBlock => !!block)}
       >
-        {(block) => (
-          <LeadProgramBlockPopover
-            key={block.id}
-            block={block}
-            leadId={leadId}
-          />
-        )}
+        {(block) => <LeadProgramBlockPopover key={block.id} block={block} leadId={leadId} />}
       </ProgramBlockListLayout>
     );
   }
@@ -66,9 +56,7 @@ export function LeadProgramBlockList({
           return <ExclamationPopover key={name} blockName={name} />;
         }
 
-        return (
-          <LeadProgramBlockPopover key={name} block={block} leadId={leadId} />
-        );
+        return <LeadProgramBlockPopover key={name} block={block} leadId={leadId} />;
       }}
     </ProgramBlockListLayout>
   );
@@ -85,11 +73,7 @@ function ProgramBlockListLayout<TBlock extends unknown>({
     return null;
   }
 
-  return (
-    <div className="mt-1 grid grid-cols-5">
-      {blocks.slice(0, 5).map((block) => children(block))}
-    </div>
-  );
+  return <div className="mt-1 grid grid-cols-5">{blocks.slice(0, 5).map((block) => children(block))}</div>;
 }
 
 function ExclamationPopover({ blockName }: { blockName: string }) {
@@ -122,8 +106,7 @@ function ExclamationPopover({ blockName }: { blockName: string }) {
 export const PortalModal = ({ children }: { children: ReactNode }) => {
   return ReactDOM.createPortal(
     <div className="modal absolute top-[212px] z-20">{children}</div>,
-    document.querySelector(".show-program-blocks") ||
-      (document.querySelector("#__next") as HTMLElement)
+    document.querySelector(".show-program-blocks") || (document.querySelector("#__next") as HTMLElement),
   );
 };
 

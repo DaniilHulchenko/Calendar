@@ -146,7 +146,7 @@ export const useLeadTeam = (leadId: number) => {
 };
 export const useLeadTeamWithEmail = (leadId: number) => {
   return useQuery(createNameLeadTeamWithEmail(leadId), async () => {
-    const response = await supabaseClient.from("trainer_lead").select("*, users(*)").eq("id_lead", leadId).eq("accepted", true);
+    const response = await supabaseClient.from("trainer_lead").select("*").eq("id_lead", leadId).eq("accepted", true);
     if (response.error) {
       throw response.error;
     }
@@ -159,7 +159,7 @@ export const createPossibleConflictedTrainerTeam = (day: string) => ["trainerLea
 
 export const usePossibleConflictedTrainerTeam = (day: string) => {
   return useQuery(createPossibleConflictedTrainerTeam(day), async () => {
-    const response = await supabaseClient.from("trainer_lead").select("*").eq("arrival_at_lead", day)
+    const response = await supabaseClient.from("trainer_lead").select("*").eq("arrival_at_lead", day);
     if (response.error) {
       throw response.error;
     }
@@ -167,10 +167,25 @@ export const usePossibleConflictedTrainerTeam = (day: string) => {
     return response.data;
   });
 };
-export const setTrainerLeadEmail = async ({ id_trainer, leadId, arrivalAtLead }: { id_trainer: string; leadId: string,arrivalAtLead:string }) => {
+export const setTrainerLeadEmail = async ({
+  id_trainer,
+  leadId,
+  arrivalAtLead,
+}: {
+  id_trainer: string;
+  leadId: string;
+  arrivalAtLead: string;
+}) => {
   const response = await supabaseClient
     .from(table)
-    .upsert({ id_profiles: id_trainer, id_lead: leadId, id_trainers: id_trainer, accepted: true, arrival_at_lead: arrivalAtLead, id_users: id_trainer })
+    .upsert({
+      id_profiles: id_trainer,
+      id_lead: leadId,
+      id_trainers: id_trainer,
+      accepted: true,
+      arrival_at_lead: arrivalAtLead,
+      id_users: id_trainer,
+    })
     .single();
   if (response.error) {
     throw response.error;

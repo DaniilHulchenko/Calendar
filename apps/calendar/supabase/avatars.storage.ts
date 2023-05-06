@@ -12,23 +12,20 @@ export async function getAvatarUrl(path: string | undefined) {
   const response = await supabaseClient.storage.from(bucketId).download(path);
 
   if (response.error) {
-    throw response.error;
+    // throw response.error;
   }
 
   return response.data && URL.createObjectURL(response.data);
 }
 
-export const uploadAvatar = (path: string, blob: Blob) =>
-  supabaseClient.storage.from(bucketId).upload(path, blob);
+export const uploadAvatar = (path: string, blob: Blob) => supabaseClient.storage.from(bucketId).upload(path, blob);
 
 export function useAvatarRemoveFileMutation() {
   return useMutation(async (avatar: Avatar) => {
-    const { data, error } = await supabaseClient.storage
-      .from(bucketId)
-      .remove([avatar.url]);
+    const { data, error } = await supabaseClient.storage.from(bucketId).remove([avatar.url]);
 
     if (error) {
-      throw error;
+      // throw error;
     }
 
     return data;
