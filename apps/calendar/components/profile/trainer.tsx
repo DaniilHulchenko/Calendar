@@ -20,6 +20,7 @@ function TrainerContainer() {
   const user = useSupabaseUser();
   const handleCreateClick = useCallback(async () => {
     await supabaseClient.from("profiles").insert({ id: user.id }).single();
+    await supabaseClient.from("trainers").insert({ id: user.id }).single();
     // await trainerMutation.mutateAsync({});
     toast.success(t("Trainer profile created"));
   }, [t, trainerMutation]);
