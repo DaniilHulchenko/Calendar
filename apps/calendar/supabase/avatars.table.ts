@@ -25,7 +25,7 @@ export function useAvatarsQuery(profileId: string) {
         .order("created_at", { ascending: false });
 
       if (error) {
-        throw error;
+        // throw error;
       }
 
       return data;
@@ -42,7 +42,7 @@ export function useAvatarDeleteMutation() {
     const { data, error } = await supabaseClient.from<Avatar>(table).delete().eq("id", avatarId).single();
 
     if (error) {
-      throw error;
+      // throw error;
     }
 
     return data;

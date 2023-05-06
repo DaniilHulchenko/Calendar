@@ -37,10 +37,6 @@ import { useRouter } from "next/router";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { enUS } from "date-fns/locale";
-import Button from "ui/buttons/Button";
-import { ViewGridAddIcon } from "@heroicons/react/outline";
-import { getManager } from "config/getManager";
-import { useTranslation } from "components/translation";
 
 const WeekColumnsList = () => {
   const weekBounds = useWeekBounds();
@@ -230,7 +226,15 @@ const WeekColumnsList = () => {
       "en-US": enUS,
     },
   });
-  const t = useTranslation();
+  if (cellContext.updated) {
+    return (
+      <div className="relative h-[100vh] w-full bg-white p-1">
+        <div className="absolute top-[50%] left-[50%] h-[200px] w-[200px]">
+          <LoaderIcon />
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className=" calendar-week [&.fc-event]:  w-full shadow-md [&>*]:bg-white [&.fc-header-title]:text-black">

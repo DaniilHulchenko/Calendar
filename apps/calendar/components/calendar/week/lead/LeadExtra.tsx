@@ -31,21 +31,18 @@ const LeadExtra = ({ cellId, lead }: { cellId: CellId | undefined; lead: Partial
       trainer_skills: any;
       accepted?: boolean | undefined;
     }[] = [];
-    // trainersQuery.data?.forEach((trainer) => {
-    //   const acceptedId = acceptedTrainers.data?.filter((acceptedTrainer) => {
-    //     if (
-    //       acceptedTrainer.accepted &&
-    //       acceptedTrainer.id_profiles === trainer.id
-    //     )
-    //       return {
-    //         id: acceptedTrainer.id_profiles,
-    //         terminate: acceptedTrainer.termiante,
-    //       };
-    //   });
-    //   if (acceptedId && acceptedId[0]?.id_profiles === trainer.id) {
-    //     result.push({ ...trainer, termiante: acceptedId[0]?.terminate });
-    //   }
-    // });
+    trainersQuery.data?.forEach((trainer) => {
+      const acceptedId = acceptedTrainers.data?.filter((acceptedTrainer) => {
+        if (acceptedTrainer.accepted && acceptedTrainer.id_profiles === trainer.id)
+          return {
+            id: acceptedTrainer.id_profiles,
+            terminate: acceptedTrainer.termiante,
+          };
+      });
+      if (acceptedId && acceptedId[0]?.id_profiles === trainer.id) {
+        result.push({ ...trainer, termiante: acceptedId[0]?.terminate });
+      }
+    });
     return result;
   }, [trainersQuery.data, acceptedTrainers.data]);
 

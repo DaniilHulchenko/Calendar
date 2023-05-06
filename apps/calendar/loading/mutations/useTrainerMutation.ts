@@ -1,10 +1,6 @@
 import { useSupabaseUser } from "components/auth/SupabaseUserProvider";
 import { supabaseTrainerByUserId } from "data/calendarQueryKeys";
-import {
-  Trainer,
-  TrainerUpsertValues,
-  upsertTrainer,
-} from "supabase/trainers.table";
+import { Trainer, TrainerUpsertValues, upsertTrainer } from "supabase/trainers.table";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const useTrainerMutation = () => {
@@ -21,10 +17,7 @@ const useTrainerMutation = () => {
       throw new Error(response.error.message);
     }
 
-    queryClient.setQueryData<Trainer>(
-      supabaseTrainerByUserId(user.id),
-      response.data
-    );
+    queryClient.setQueryData<Trainer>(supabaseTrainerByUserId(user.id), response.data);
   });
 };
 
