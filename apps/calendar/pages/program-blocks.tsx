@@ -1,4 +1,4 @@
-\import { KeyIcon, PuzzleIcon } from "@heroicons/react/outline";
+import { KeyIcon, PuzzleIcon } from "@heroicons/react/outline";
 import { PlusIcon, SaveIcon } from "@heroicons/react/solid";
 import fontColorContrast from "font-color-contrast";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
