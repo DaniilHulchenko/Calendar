@@ -15,3 +15,10 @@ Description :Fixed bug in program-blocks.tsx(where triggered useEffect hook and 
 Name: Daniil Hulchenko
 GitHub link:https://github.com/DaniilHulchenko/WWW
 PullRequest Link :https://github.com/BiigBan/Calendar/pull/13
+
+# Lab4:
+
+Description : breaking code blocks into functions, outputting a series by a separate component, reducing html
+Name: Daniil Hulchenko
+GitHub link:https://github.com/DaniilHulchenko/WWW
+PullRequest Link :https://github.com/BiigBan/Calendar/pull/14
