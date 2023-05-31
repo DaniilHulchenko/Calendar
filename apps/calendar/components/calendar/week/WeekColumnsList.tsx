@@ -107,10 +107,13 @@ const WeekColumnsList = () => {
     }
     return arr;
   };
-
+// Avoid multiple conditional assignments and return statements within the same block of code. Instead, you can combine the conditions and use a single return statement. This will make the code more concise and easier to read.
+// Use array methods like map, filter, and reduce to manipulate the data instead of multiple nested loops.
   const events = useMemo(() => {
     let leads = leadsQuery.data?.map((lead) => {
+    //Consider using a more descriptive variable name instead of generic names like leads or differenceDate to enhance code understanding.
       const differenceDate = getDaysArray(new Date(lead.arrival_at), new Date(lead.departure ?? lead.arrival_at));
+    //Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
       const differenceDay = differenceDate
         .map((v) => formatISO(v, { representation: "date" }))
         .filter(
@@ -126,7 +129,7 @@ const WeekColumnsList = () => {
         );
       return { ...lead, difference: [...differenceDay] };
     });
-
+//Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.assignedBy) {
       leads = leads?.filter((lead) => {
         let assigned = team.data?.map((team) => {
@@ -135,6 +138,7 @@ const WeekColumnsList = () => {
         if (assigned?.includes(lead.id)) return lead;
       });
     }
+    //Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.appliedBy) {
       leads = leads?.filter((lead) => {
         let joinedPerson = joined.data?.map((join) => {
@@ -143,20 +147,23 @@ const WeekColumnsList = () => {
         if (joinedPerson?.includes(lead.id)) return lead;
       });
     }
-
+//Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.filterBy?.length && cellContext.filterBy.length > 0) {
       leads = leads?.filter((lead) => cellContext.filterBy?.includes(lead?.subsystem || ""));
     }
+    //Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.statusBy?.length && cellContext.statusBy.length > 0) {
       leads = leads?.filter((lead) => cellContext.statusBy?.includes(lead?.status || ""));
     }
+    //Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.staffBy === "Staff") {
       leads = leads?.filter((lead) => lead.required_trainers_amount && lead.required_trainers_amount > 0);
     }
+    //Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.staffBy === "No Staff") {
       leads = leads?.filter((lead) => lead.required_trainers_amount === 0 || lead.required_trainers_amount === null);
     }
-
+//Break down the logic into smaller functions or separate utility functions to improve code readability and reusability.
     if (cellContext.sortBy) {
       leads?.sort((a, b) => {
         if (a.subsystem === cellContext.sortBy && b.subsystem === cellContext.sortBy) {
@@ -168,6 +175,7 @@ const WeekColumnsList = () => {
         }
       });
     }
+    //Don`t ue sort after sort(it`s useless)
     return leads
       ?.sort((a, b) => {
         if (a.subsystem === b.subsystem) {
@@ -175,7 +183,7 @@ const WeekColumnsList = () => {
           const locationB = merge(b.location, b.location_ev);
           return locationA.localeCompare(locationB);
         } else return 0;
-      })
+      })//Don`t ue sort after sort(it`s useless)
       ?.sort((a, b) => {
         if (new Date(a.arrival_at) < new Date(b.arrival_at)) {
           return -1;
@@ -201,6 +209,7 @@ const WeekColumnsList = () => {
         };
       });
   }, [
+    // Remove dependices, That`s trigger function a lot of times
     leadsQuery.data,
     cellContext.sortBy,
     cellContext.filterBy,
